@@ -1,4 +1,6 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (! defined('BASEPATH')) {
+    exit('No direct script access allowed');
+}
 
 /*
  * FreeMember add-on for ExpressionEngine
@@ -37,6 +39,7 @@ class Freemember
 
     public function __construct()
     {
+
         ee()->load->library('freemember_lib');
     }
 
@@ -45,6 +48,7 @@ class Freemember
      */
     public function login()
     {
+
         // form fields
         $this->tag_vars = array();
         $this->_add_field('email', 'email');
@@ -72,7 +76,9 @@ class Freemember
      */
     public function register()
     {
-        if ($error = ee()->freemember->can_register()) return $error;
+        if ($error = ee()->freemember->can_register()) {
+            return $error;
+        }
 
         // form fields
         $this->tag_vars = array();
@@ -103,7 +109,9 @@ class Freemember
      */
     public function update_profile()
     {
-        if ($error = ee()->freemember->can_update()) return $error;
+        if ($error = ee()->freemember->can_update()) {
+            return $error;
+        }
 
         $member = ee()->freemember->current_member();
 
@@ -294,7 +302,9 @@ class Freemember
         $options_html = '';
         foreach ($options as $option) {
             $options_html .= "<option value='$option'";
-            if ($option == $value) $options_html .= " selected";
+            if ($option == $value) {
+                $options_html .= " selected";
+            }
             $options_html .=">$option</option>";
         }
 

@@ -1,17 +1,17 @@
 # FreeMember: Free your member templates!
 
-FreeMember is a free add-on for ExpressionEngine 2.2+, which adds powerful inline member profile
+FreeMember is a free add-on for ExpressionEngine 5+, which adds powerful inline member profile
 & authentication tags using the native EE template syntax, instead of using the ugly and inflexible
 static member templates bundled with EE.
 
 ## Requirements
 
-* ExpressionEngine 2.6+ (EE Core is not supported)
-* PHP 5.3+
+* ExpressionEngine 5+
+* PHP 7.1+
 
 ## Installation
 
-1. Copy the `freemember` folder to `system/expressionengine/third_party` on your server.
+1. Copy the `freemember` folder to `system/user/addons` on your server.
 2. Create an encryption key in `config.php` if you have not already done so (see below).
 2. Visit Add-ons > Modules > FreeMember on your server, and click Install next to FreeMember.
 

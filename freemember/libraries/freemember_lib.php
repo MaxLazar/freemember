@@ -1,4 +1,6 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (! defined('BASEPATH')) {
+    exit('No direct script access allowed');
+}
 
 /*
  * FreeMember add-on for ExpressionEngine
@@ -29,7 +31,7 @@ class Freemember_lib
 
     public function __construct()
     {
-        ee()->freemember =& $this;
+        ee()->set('freemember', $this);
 
         ee()->load->model('freemember_model');
         ee()->load->helper(array('string', 'security'));
@@ -58,7 +60,9 @@ class Freemember_lib
         /*  - Added EE 1.4.2
         */
             $edata = ee()->extensions->call('member_member_login_start');
-            if (ee()->extensions->end_script === true) return;
+        if (ee()->extensions->end_script === true) {
+            return;
+        }
         /*
         /* -------------------------------------------*/
 
@@ -83,11 +87,11 @@ class Freemember_lib
         }
 
         // oh dear, login failed already...
-        if ( ! empty($errors)) {
+        if (! empty($errors)) {
             return $errors;
         }
 
-        if ( ! ee()->auth->check_require_ip()) {
+        if (! ee()->auth->check_require_ip()) {
             return array($auth_field => lang('unauthorized_request'));
         }
 
@@ -130,13 +134,13 @@ class Freemember_lib
 
         // Allow multiple logins?
         // Do we allow multiple logins on the same account?
-        if (ee()->config->item('allow_multi_logins') == 'n' AND $sess->has_other_session()) {
+        if (ee()->config->item('allow_multi_logins') == 'n' and $sess->has_other_session()) {
             return array($auth_field => lang('not_authorized'));
         }
 
         // Start Session
         // "Remember Me" is one year
-        if ( ! empty($_POST['auto_login'])) {
+        if (! empty($_POST['auto_login'])) {
             $sess->remember_me(60*60*24*365);
         }
 
@@ -220,40 +224,6 @@ class Freemember_lib
 
         ee()->freemember_model->update_member($member_id, $_POST);
         ee()->freemember_model->update_member_custom($member_id, $_POST);
-
-        // Update forum and comments info if screen_name changed
-        if (isset($_POST['screen_name']) && $_POST['screen_name'] != '' 
-            && ee()->session->userdata('screen_name') != $_POST['screen_name'])
-        {
-            // update forum
-            if(ee()->config->item('forum_is_installed') == "y")
-            {
-                ee()->db->where('forum_last_post_author_id', $member_id);
-                ee()->db->update(
-                    'forums',
-                    array('forum_last_post_author' => $_POST['screen_name'])
-                );
-                ee()->db->where('mod_member_id', $member_id);
-                ee()->db->update(
-                    'forum_moderators',
-                    array('mod_member_name' => $_POST['screen_name'])
-                );
-            }
-
-            // update comments
-            $query = ee()->db->select('module_name')
-                             ->where('module_name', 'Comment')
-                             ->get('modules');
-            
-            if ($query->num_rows() > 0)
-            {
-                ee()->db->where('author_id', $member_id);
-                ee()->db->update(
-                    'comments', 
-                    array('name' => $_POST['screen_name'])
-                    );
-            }
-        }
     }
 
     /**
@@ -315,7 +285,7 @@ class Freemember_lib
         ee()->email->subject(ee()->template->parse_variables($template['title'], $email_vars));
         ee()->email->message(ee()->template->parse_variables($template['data'], $email_vars));
 
-        if ( ! ee()->email->send()) {
+        if (! ee()->email->send()) {
             ee()->output->show_user_error('submission', array(lang('error_sending_email')));
         }
     }
@@ -342,11 +312,13 @@ class Freemember_lib
         }
 
         // update member password
-        ee()->freemember_model->update_member($member->member_id,
-            array('password' => $_POST['password']));
+        ee()->freemember_model->update_member(
+            $member->member_id,
+            array('password' => $_POST['password'])
+        );
 
         // expire reset code
-        ee()->freemember_model->clean_password_reset_codes($member->member_id);
+            ee()->freemember_model->clean_password_reset_codes($member->member_id);
     }
 
     /**
@@ -404,9 +376,15 @@ class Freemember_lib
     {
         // automatically set screen_name and username if not submitted
         // also makes sure these fields are requried by initializing to empty string
-        if ( ! isset($_POST['email'])) $_POST['email'] = '';
-        if ( ! isset($_POST['username'])) $_POST['username'] = $_POST['email'];
-        if ( ! isset($_POST['screen_name'])) $_POST['screen_name'] = $_POST['username'];
+        if (! isset($_POST['email'])) {
+            $_POST['email'] = '';
+        }
+        if (! isset($_POST['username'])) {
+            $_POST['username'] = $_POST['email'];
+        }
+        if (! isset($_POST['screen_name'])) {
+            $_POST['screen_name'] = $_POST['username'];
+        }
 
         ee()->load->library('fm_form_validation');
         $this->_add_member_validation_rules();
@@ -429,7 +407,9 @@ class Freemember_lib
          * @since 2.0
          */
         ee()->extensions->call('freemember_register_validation');
-        if (ee()->extensions->end_script === true) return;
+        if (ee()->extensions->end_script === true) {
+            return;
+        }
 
         // run form validation
         if (ee()->form_validation->run() === false) {
@@ -451,7 +431,7 @@ class Freemember_lib
         ee()->form_validation->set_old_value('screen_name', ee()->session->userdata('screen_name'));
 
         // if new password is submitted, then current_password and password_confirm are required
-        if ( ! empty($_POST['password'])) {
+        if (! empty($_POST['password'])) {
             ee()->form_validation->add_rules('current_password', 'lang:current_password', 'required');
             ee()->form_validation->add_rules('password_confirm', 'lang:password_confirm', 'required');
         }
@@ -462,7 +442,9 @@ class Freemember_lib
          * @since 2.0
          */
         ee()->extensions->call('freemember_update_validation');
-        if (ee()->extensions->end_script === true) return;
+        if (ee()->extensions->end_script === true) {
+            return;
+        }
 
         // run form validation
         if (ee()->form_validation->run() === false) {
@@ -476,14 +458,6 @@ class Freemember_lib
      */
     public function _add_member_validation_rules()
     {
-        // check forbidden="" param
-        $forbidden_fields = explode('|', $this->form_param('forbidden'));
-        foreach ($forbidden_fields as $field) {
-            if(isset($_POST[$field])) {
-                unset($_POST[$field]);
-            }
-        }
-
         // check for require="" param
         $require_fields = explode('|', $this->form_param('require'));
         foreach ($require_fields as $field) {
@@ -529,7 +503,7 @@ class Freemember_lib
             // ensure select fields match a valid option
             if ($field->m_field_type == 'select') {
                 $options = explode("\n", $field->m_field_list_items);
-                if ( ! in_array(ee()->input->post($field->m_field_name), $options)) {
+                if (! in_array(ee()->input->post($field->m_field_name), $options)) {
                     $field_rules .= '|fm_invalid_selection';
                 }
             }
@@ -591,12 +565,12 @@ class Freemember_lib
      */
     public function load_member_class($class_name)
     {
-        if ( ! class_exists('Member')) {
+        if (! class_exists('Member')) {
             require PATH_MOD.'member/mod.member.php';
         }
 
         $class_name = ucfirst($class_name);
-        if ( ! class_exists($class_name)) {
+        if (! class_exists($class_name)) {
             require PATH_MOD.'member/mod.'.strtolower($class_name).'.php';
         }
 

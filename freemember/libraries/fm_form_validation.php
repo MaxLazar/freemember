@@ -1,4 +1,6 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (! defined('BASEPATH')) {
+    exit('No direct script access allowed');
+}
 
 /*
  * FreeMember add-on for ExpressionEngine
@@ -32,11 +34,12 @@ class Fm_form_validation extends EE_Form_validation
     {
         parent::__construct($rules);
 
+        ee()->remove('form_validation');
         // overwrite EE form validation library
-        ee()->form_validation =& $this;
+        ee()->set('form_validation', $this);
 
         // load EE_Validate class
-        if ( ! class_exists('EE_Validate')) {
+        if (! class_exists('EE_Validate')) {
             require APPPATH.'libraries/Validate.php';
         }
 
@@ -68,7 +71,7 @@ class Fm_form_validation extends EE_Form_validation
     public function add_rules($field, $label = '', $rules = '')
     {
         // are there any existing rules for this field?
-        if ( ! empty($this->_field_data[$field]['rules'])) {
+        if (! empty($this->_field_data[$field]['rules'])) {
             $rules = trim($this->_field_data[$field]['rules'].'|'.$rules, '|');
         }
 
@@ -81,7 +84,9 @@ class Fm_form_validation extends EE_Form_validation
     public function fm_current_password($str)
     {
         $current_member_id = ee()->session->userdata('member_id');
-        if ($str == '' || $current_member_id == 0) return true;
+        if ($str == '' || $current_member_id == 0) {
+            return true;
+        }
 
         $this->set_message('fm_current_password', lang('invalid_password'));
         ee()->load->library('auth');

@@ -5,7 +5,7 @@ if (defined('APP_VER') && !defined('EE_APPPATH') && version_compare(APP_VER, '2.
     show_error('FreeMember requires ExpressionEngine version 2.6+, you have '.APP_VER);
 }
 
-if ( ! defined('FREEMEMBER_NAME')) {
+if (! defined('FREEMEMBER_NAME')) {
     define('FREEMEMBER_NAME', 'FreeMember');
     define('FREEMEMBER_CLASS', 'Freemember');
     define('FREEMEMBER_VERSION', '2.3.3');

@@ -1,6 +1,10 @@
 # FreeMember Release Notes
 
-## FreeMember 2.3.2
+## FreeMember 2.3.3
+*Released Feb 10, 2020*
+
+* EE5 support (@MaxLazar)
+
 *Released May 8, 2014*
 
 * Fixing username parsing in forgot password email (@Abban)
