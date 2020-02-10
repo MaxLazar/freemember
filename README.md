@@ -1,8 +1,11 @@
 # FreeMember: Free your member templates!
 
-FreeMember is a free add-on for ExpressionEngine 5+, which adds powerful inline member profile
+FreeMember is a free add-on for ExpressionEngine 5+ , which adds powerful inline member profile
 & authentication tags using the native EE template syntax, instead of using the ugly and inflexible
 static member templates bundled with EE.
+
+
+Please be careful in use with ee5 - update is still in progress.
 
 ## Requirements
 
